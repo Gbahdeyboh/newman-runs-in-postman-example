@@ -1,26 +1,23 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+workflows:
+  run-collection-workflow:
+    jobs:
+      - newman-collection-run
+
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  newman-collection-run:
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: node:16-alpine
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
-workflows:
-  say-hello-workflow:
-    jobs:
-      - say-hello
+          name: Install Newman and postman cloud reporter
+          command: npm install -g newman newman-reporter-postman-cloud
+      - run:
+          name: Run collection and upload results
+          command:  newman run "https://api.getpostman.com/collections/20781379-b7630fe7-3388-4759-a4c3-35dff3ab0ced?apikey=${POSTMAN_API_KEY}"  --environment "https://api.getpostman.com/environments/20781379-693005f7-cc91-471f-ab28-5090a42c57c2?apikey=${POSTMAN_API_KEY}" -r postman-cloud --reporter-apiKey "${POSTMAN_API_KEY}" --reporter-workspaceId "e7fc5730-6c18-4af9-af07-806edc6f49c0" --reporter-integrationIdentifier "120219-${CIRCLE_WORKFLOW_JOB_ID}"
+          environment:
+            POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
+            CIRCLE_WORKFLOW_JOB_ID: ${{ secrets.CIRCLE_WORKFLOW_JOB_ID }}
+            
