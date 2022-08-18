@@ -16,5 +16,4 @@ jobs:
           command: npm install -g newman newman-reporter-postman-cloud
       - run:
           name: Run collection and upload results
-          command:  newman run "https://api.getpostman.com/collections/20781379-b7630fe7-3388-4759-a4c3-35dff3ab0ced?apikey=${POSTMAN_API_KEY}"  --environment "https://api.getpostman.com/environments/20781379-693005f7-cc91-471f-ab28-5090a42c57c2?apikey=${POSTMAN_API_KEY}" -r postman-cloud --reporter-apiKey "${POSTMAN_API_KEY}" --reporter-workspaceId "e7fc5730-6c18-4af9-af07-806edc6f49c0" --reporter-integrationIdentifier "120219-${CIRCLE_WORKFLOW_JOB_ID}"
-            
+          command:  newman run "https://api.getpostman.com/collections/21505573-d7f90964-cc4c-45bf-a0f3-e3c12c818326?apikey=${POSTMAN_API_KEY}" -r postman-cloud --reporter-apiKey "${POSTMAN_API_KEY}" --reporter-workspaceId "995e1f5c-bf58-4d6a-8c64-9908adfc1ae5" --reporter-integrationIdentifier "120852-${CIRCLE_WORKFLOW_JOB_ID}"
